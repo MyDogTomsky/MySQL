@@ -5,9 +5,21 @@
 ## Kaggle DATASET Link: [https://www.kaggle.com/datasets/hmavrodiev/london-bike-sharing-dataset]
 ## TfL DATASET Link: [https://cycling.data.tfl.gov.uk/]
 ##--------------------------------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS bike_variation;
 
 USE bike_variation;
 SHOW TABLES;
+
+CREATE TABLE IF NOT EXISTS london_merged(timestamp DATETIME, cnt INT,
+t1 DOUBLE, t2 DOUBLE, wind_speed DOUBLE, hum DOUBLE, weather_code int,is_holiday int,
+is_weekend int, season int);
+
+LOAD DATA LOCAL INFILE 'D:\\SQL\\CFG\\submisson\\london_merged.csv'
+INTO TABLE london_merged
+FIELDS TERMINATED BY ','
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
 DESC london_merged;
 
 CREATE TABLE time_count(timestamp datetime, cnt int);
@@ -112,6 +124,7 @@ ALTER TABLE season  ADD CONSTRAINT FOREIGN KEY(timestamp) REFERENCES time_count(
 
 #---------EVENT ------------------------
 
+SET GLOBAL event_scheduler = ON;
 SHOW VARIABLES LIKE 'event_scheduler';
 
 CREATE EVENT remove_old ON SCHEDULE EVERY 1 YEAR
